@@ -8,7 +8,8 @@
  */
 function bubbleChart() {
   // Constants for sizing
-  var width = 940;
+  var width = 1000;
+  var width_pane = width/7;
   var height = 800;
 
   // tooltip for mouseover functionality
@@ -30,13 +31,13 @@ function bubbleChart() {
 
   // X locations of the year titles.
   var yearsTitleX = {
-    2012: width / 7,
-    2013: 2 * width / 7,
-    2014: 3 * width / 7,
-    2015: 4 * width / 7,
-    2016: 5 * width / 7,
-    2017: 6 * width / 7,
-    2018: 7 * width / 7
+    2012: (width / 7) - (width_pane/2) ,
+    2013: (2 * width / 7) - (width_pane/2) ,
+    2014: (3 * width / 7) - (width_pane/2) ,
+    2015: (4 * width / 7) - (width_pane/2) ,
+    2016: (5 * width / 7) - (width_pane/2) ,
+    2017: (6 * width / 7) - (width_pane/2) ,
+    2018: (7 * width / 7) - (width_pane/2) 
   };
 
   // @v4 strength to apply to the position forces
@@ -83,7 +84,7 @@ function bubbleChart() {
   // @v4 scales now have a flattened naming scheme
   var fillColor = d3.scaleOrdinal()
     .domain(['negative', 'neutral', 'positive'])
-    .range(['#d84b2a', '#beccae', '#7aa25c']);
+    .range(['#ff6961', '#aab6ab ', '#61ff69']);
 
 
   /*
@@ -120,8 +121,9 @@ function bubbleChart() {
         value: +d.pop_score,
         name: d.username,
         org: d.text,
-        group: d.sentiment  ,
+        group: d.sentiment,
         year: d.year,
+        date: d.time,
         x: Math.random() * 900,
         y: Math.random() * 800
       };
@@ -279,16 +281,17 @@ function bubbleChart() {
    */
   function showDetail(d) {
     // change outline to indicate hover state.
-    d3.select(this).attr('stroke', 'black');
+    d3.select(this).attr('fill', '#61a8ff')
+                   .attr('stroke', '#0069ea');
 
     var content = '<span class="name">username: </span><span class="value">' +
                   d.name +
                   '</span><br/>' +
-                  '<span class="name">score: </span><span class="value">' +
+                  '<span class="name">sentiment score: </span><span class="value">' +
                   d.value +
                   '</span><br/>' +
-                  '<span class="name">Year: </span><span class="value">' +
-                  d.year +
+                  '<span class="name">date: </span><span class="value">' +
+                  d.date +
                   '</span>';
 
     tooltip.showTooltip(content, d3.event);
@@ -300,7 +303,8 @@ function bubbleChart() {
   function hideDetail(d) {
     // reset outline
     d3.select(this)
-      .attr('stroke', d3.rgb(fillColor(d.group)).darker());
+      .attr('fill', d3.rgb(fillColor(d.group)))
+      .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); });
 
     tooltip.hideTooltip();
   }
