@@ -29,7 +29,7 @@ function floatingTooltip(tooltipId, width) {
    * event is d3.event for positioning.
    */
   function showTooltip(content, event) {
-    tt.style('opacity', 0.2)
+    tt.style('opacity', 0.6)
       .html(content);
 
     updatePosition(event);
