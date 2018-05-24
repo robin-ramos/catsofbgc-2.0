@@ -287,7 +287,7 @@ function bubbleChart() {
     var content = '<span class="name">username: </span><span class="value">' +
                   d.name +
                   '</span><br/>' +
-                  '<span class="name">sentiment score: </span><span class="value">' +
+                  '<span class="name">popularity score: </span><span class="value">' +
                   d.value +
                   '</span><br/>' +
                   '<span class="name">date: </span><span class="value">' +
