@@ -12,7 +12,7 @@ function bubbleChart() {
   var width = document.body.clientWidth;
   var width_pane = width/6;
   var adj = width/12;
-  var height = 800;
+  var height = document.body.clientHeight * 0.9;
   var nodes = [];
 
 
@@ -115,7 +115,7 @@ function bubbleChart() {
     // @v4: new flattened scale names.
     var radiusScale = d3.scalePow()
       .exponent(0.5)
-      .range([2, 70])
+      .range([2, width*0.05])
       .domain([0, maxAmount]);
 
     // Use map() to convert raw data into node data.
@@ -184,8 +184,8 @@ function bubbleChart() {
       .classed('bubble', true)
       .attr('r', 0)
       .attr('fill', function (d) { return fillColor(d.group); })
-      .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
-      .attr('stroke-width', 0)
+      .attr('stroke', 'white')
+      .attr('stroke-width', 2)
       .on('mouseover', showDetail)
       .on('mouseout', hideDetail);
 
@@ -256,6 +256,16 @@ function bubbleChart() {
     simulation.alpha(1).restart();
   }
 
+  function repositionBubbles() {
+    hideYearTitles();
+
+    // @v4 Reset the 'x' force to draw the bubbles to the center.
+    simulation.force('x', d3.forceX().strength(forceStrength).x(90));
+
+    // @v4 We can reset the alpha value and restart the simulation
+    simulation.alpha(1).restart();
+  }
+
 
   /*
    * Sets visualization in "split by year mode".
@@ -293,7 +303,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX[d]; })
-      .attr('y', 40)
+      .attr('y', 20)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -326,7 +336,7 @@ function bubbleChart() {
     // reset outline
     d3.select(this)
       .attr('fill', d3.rgb(fillColor(d.group)))
-      .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); });
+      .attr('stroke', 'white');
 
     tooltip.hideTooltip();
   }
@@ -341,7 +351,11 @@ function bubbleChart() {
   chart.toggleDisplay = function (displayName) {
     if (displayName === 'year') {
       splitBubbles();
-    } else {
+    } 
+    else if (displayName === 'position') {
+      repositionBubbles();
+    }
+    else {
       groupBubbles();
     }
   };

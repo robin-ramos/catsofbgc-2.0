@@ -24,8 +24,8 @@ a, a:visited, a:active {
 
 
 #vis {
-  width: 940px;
-  height: 600px;
+  width: 100%;
+  height: 100vh;
   clear: both;
   margin-bottom: 10px;
 }
