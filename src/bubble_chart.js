@@ -1,43 +1,47 @@
-/* bubbleChart creation function. Returns a function that will
- * instantiate a new bubble chart given a DOM element to display
- * it in and a dataset to visualize.
- *
- * Organization and style inspired by:
- * https://bost.ocks.org/mike/chart/
- *
- */
+var nodess = [];
+var clusters = new Array(3);
+
+var formatDate = d3.timeFormat("%B %d, %Y");
+var formatDecimal = d3.format(".2f");
+var formatInteger = d3.format(".0f");
+var parseTime = d3.timeParse("%d/%m/%Y");
+var formatComma = d3.format(",.0f");
+
 function bubbleChart() {
   // Constants for sizing
-  var width = 1000;
-  var width_pane = width/7;
+  var width = document.body.clientWidth;
+  var width_pane = width/6;
+  var adj = width/12;
   var height = 800;
+  var nodes = [];
+
 
   // tooltip for mouseover functionality
-  var tooltip = floatingTooltip('gates_tooltip', 240);
+  var tooltip = floatingTooltip('tooltipID', 240);
 
   // Locations to move bubbles towards, depending
   // on which view mode is selected.
   var center = { x: width / 2, y: height / 2 };
 
   var yearCenters = {
-    2012: { x: width / 7, y: height / 2 },
-    2013: { x: 2 * width / 7, y: height / 2 },
-    2014: { x: 3 * width / 7, y: height / 2 },
-    2015: { x: 4 * width / 7, y: height / 2 },
-    2016: { x: 5 * width / 7, y: height / 2 },
-    2017: { x: 6 * width / 7, y: height / 2 },
-    2018: { x: 7 * width / 7, y: height / 2 }
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: width_pane + (width_pane/2), y: height / 2 },
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
+    2015: { x: width_pane + 3*(width_pane/2), y: height / 2 },
+    2016: { x: width_pane + 4*(width_pane/2), y: height / 2 },
+    2017: { x: width_pane + 5*(width_pane/2), y: height / 2 },
+    2018: { x: (width * 3)/4, y: height / 2 }
   };
 
   // X locations of the year titles.
   var yearsTitleX = {
-    2012: (width / 7) - (width_pane/2) ,
-    2013: (2 * width / 7) - (width_pane/2) ,
-    2014: (3 * width / 7) - (width_pane/2) ,
-    2015: (4 * width / 7) - (width_pane/2) ,
-    2016: (5 * width / 7) - (width_pane/2) ,
-    2017: (6 * width / 7) - (width_pane/2) ,
-    2018: (7 * width / 7) - (width_pane/2) 
+    2012: width_pane - adj,
+    2013: width_pane + (width_pane/2) - adj,
+    2014: width_pane + 2*(width_pane/2) - adj,
+    2015: width_pane + 3*(width_pane/2) - adj,
+    2016: width_pane + 4*(width_pane/2) - adj,
+    2017: width_pane + 5*(width_pane/2) - adj,
+    2018: (width * 3)/4  
   };
 
   // @v4 strength to apply to the position forces
@@ -46,7 +50,7 @@ function bubbleChart() {
   // These will be set in create_nodes and create_vis
   var svg = null;
   var bubbles = null;
-  var nodes = [];
+
 
   // Charge function that is called for each node.
   // As part of the ManyBody force.
@@ -74,6 +78,7 @@ function bubbleChart() {
     .force('x', d3.forceX().strength(forceStrength).x(center.x))
     .force('y', d3.forceY().strength(forceStrength).y(center.y))
     .force('charge', d3.forceManyBody().strength(charge))
+    //.force('cluster', forceCluster)
     .on('tick', ticked);
 
   // @v4 Force starts up automatically,
@@ -83,8 +88,10 @@ function bubbleChart() {
   // Nice looking colors - no reason to buck the trend
   // @v4 scales now have a flattened naming scheme
   var fillColor = d3.scaleOrdinal()
-    .domain(['negative', 'neutral', 'positive'])
-    .range(['#ff6961', '#aab6ab ', '#61ff69']);
+    .domain(['negative', 'neutral', 'positive', 'featured'])
+    .range(['#ff6961', '#aab6ab ', '#61ff69', '#104e8e']);
+  
+
 
 
   /*
@@ -108,13 +115,14 @@ function bubbleChart() {
     // @v4: new flattened scale names.
     var radiusScale = d3.scalePow()
       .exponent(0.5)
-      .range([2, 85])
+      .range([2, 70])
       .domain([0, maxAmount]);
 
     // Use map() to convert raw data into node data.
     // Checkout http://learnjsdata.com/ for more on
     // working with data.
     var myNodes = rawData.map(function (d) {
+      if (!clusters[d.cluster] || (radiusScale(+d.pop_score) > clusters[d.cluster].radius)) clusters[d.cluster] = d;
       return {
         id: d.id,
         radius: radiusScale(+d.pop_score),
@@ -123,18 +131,22 @@ function bubbleChart() {
         org: d.text,
         group: d.sentiment,
         year: d.year,
-        date: d.time,
+        date: parseTime(d.time),
+        cluster: +d.cluster,
+        followers: d.followers_count,
+        likes: d.fave,
+        retweets: d.rt,
+        sent_score: d.score,
         x: Math.random() * 900,
         y: Math.random() * 800
       };
+
     });
 
     // sort them to prevent occlusion of smaller nodes.
     myNodes.sort(function (a, b) { return b.value - a.value; });
-
     return myNodes;
   }
-
   /*
    * Main entry point to the bubble chart. This function is returned
    * by the parent closure. It prepares the rawData for visualization
@@ -151,7 +163,7 @@ function bubbleChart() {
   var chart = function chart(selector, rawData) {
     // convert raw data into nodes data
     nodes = createNodes(rawData);
-
+    nodess = nodes;
     // Create a SVG element inside the provided selector
     // with desired size.
     svg = d3.select(selector)
@@ -173,7 +185,7 @@ function bubbleChart() {
       .attr('r', 0)
       .attr('fill', function (d) { return fillColor(d.group); })
       .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
-      .attr('stroke-width', 2)
+      .attr('stroke-width', 0)
       .on('mouseover', showDetail)
       .on('mouseout', hideDetail);
 
@@ -186,14 +198,26 @@ function bubbleChart() {
       .duration(2000)
       .attr('r', function (d) { return d.radius; });
 
+
+
     // Set the simulation's nodes to our newly created nodes array.
     // @v4 Once we set the nodes, the simulation will start running automatically!
     simulation.nodes(nodes);
-
+    
     // Set initial layout to single group.
+
+
     groupBubbles();
   };
 
+  function forceCluster(alpha) {
+    for (var i = 0, n = nodess.length, node, cluster, k = alpha * 1; i < n; ++i) {
+      node = nodess[i];
+      cluster = clusters[node.cluster];
+      node.vx -= (node.x - cluster.x) * k;
+      node.vy -= (node.y - cluster.y) * k;
+    }
+  }
   /*
    * Callback function that is called after every tick of the
    * force simulation.
@@ -284,15 +308,13 @@ function bubbleChart() {
     d3.select(this).attr('fill', '#61a8ff')
                    .attr('stroke', '#0069ea');
 
-    var content = '<span class="name">username: </span><span class="value">' +
-                  d.name +
-                  '</span><br/>' +
-                  '<span class="name">popularity score: </span><span class="value">' +
-                  d.value +
-                  '</span><br/>' +
-                  '<span class="name">date: </span><span class="value">' +
-                  d.date +
-                  '</span>';
+    var content = '<span class="value">Username </span><span class="name">@' +
+                  d.name + '</span> (' + formatComma(d.followers) + ' followers)' +
+                  ' tweeted on<br/><span class="name">' + formatDate(d.date) + '</span><br>' +
+                  'with a sentiment score of <span class="name">' + formatDecimal(d.sent_score) + '</span><br><br>' +
+                  '<span>Likes: ' + d.likes + '</span><br>' +
+                  '<span>Retweets: ' + d.retweets + '</span>';
+    var tweetID = d.id;
 
     tooltip.showTooltip(content, d3.event);
   }
@@ -394,3 +416,4 @@ d3.csv('data/allposts3.csv', display);
 
 // setup the buttons.
 setupButtons();
+

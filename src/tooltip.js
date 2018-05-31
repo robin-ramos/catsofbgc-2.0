@@ -29,10 +29,16 @@ function floatingTooltip(tooltipId, width) {
    * event is d3.event for positioning.
    */
   function showTooltip(content, event) {
-    tt.style('opacity', 0.6)
+    tt.style('opacity', 0.8)
       .html(content);
-
+    //loadTweet(tweetID);
+    //console.log(event)
     updatePosition(event);
+  }
+
+  function loadTweet(id) {
+    //var tweet = document.getElementById("tooltipID");
+    //twttr.widgets.createTweet(id, tweet, { conversation: "none", width: 550 })
   }
 
   /*

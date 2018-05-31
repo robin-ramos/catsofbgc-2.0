@@ -32,6 +32,7 @@ a, a:visited, a:active {
 
 #toolbar {
   margin-top: 10px;
+  margin-left: 10px;
 }
 
 .year {
