@@ -124,7 +124,7 @@ function bubbleChart() {
     var myNodes = rawData.map(function (d) {
       if (!clusters[d.cluster] || (radiusScale(+d.pop_score) > clusters[d.cluster].radius)) clusters[d.cluster] = d;
       return {
-        id: d.id,
+        id: d.ids,
         radius: radiusScale(+d.pop_score),
         value: +d.pop_score,
         name: d.username,
@@ -185,7 +185,7 @@ function bubbleChart() {
       .attr('r', 0)
       .attr('fill', function (d) { return fillColor(d.group); })
       .attr('stroke', 'white')
-      .attr('stroke-width', 2)
+      .attr('stroke-width', 1)
       .on('mouseover', showDetail)
       .on('mouseout', hideDetail);
 
@@ -320,13 +320,13 @@ function bubbleChart() {
 
     var content = '<span class="value">Username </span><span class="name">@' +
                   d.name + '</span> (' + formatComma(d.followers) + ' followers)' +
-                  ' tweeted on<br/><span class="name">' + formatDate(d.date) + '</span><br>' +
-                  'with a sentiment score of <span class="name">' + formatDecimal(d.sent_score) + '</span><br><br>' +
+                  ' tweeted on <span class="name">' + formatDate(d.date) + '</span>' +
+                  ' with a sentiment score of <span class="name">' + formatDecimal(d.sent_score) + '</span><br><br>' +
                   '<span>Likes: ' + d.likes + '</span><br>' +
                   '<span>Retweets: ' + d.retweets + '</span>';
     var tweetID = d.id;
-
-    tooltip.showTooltip(content, d3.event);
+    console.log(tweetID)
+    tooltip.showTooltip(content, d3.event, tweetID);
   }
 
   /*
@@ -426,7 +426,7 @@ function addCommas(nStr) {
 }
 
 // Load the data.
-d3.csv('data/allposts3.csv', display);
+d3.csv('data/allposts4.csv', display);
 
 // setup the buttons.
 setupButtons();

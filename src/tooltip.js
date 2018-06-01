@@ -28,17 +28,23 @@ function floatingTooltip(tooltipId, width) {
    *
    * event is d3.event for positioning.
    */
-  function showTooltip(content, event) {
-    tt.style('opacity', 0.8)
+  function showTooltip(content, event, tweetID) {
+    tt.style('opacity', 1)
       .html(content);
-    //loadTweet(tweetID);
-    //console.log(event)
+    loadTweet(tweetID);
+    console.log(tweetID)
+    //console.log(pointer-eventsnt)
     updatePosition(event);
   }
 
   function loadTweet(id) {
-    //var tweet = document.getElementById("tooltipID");
-    //twttr.widgets.createTweet(id, tweet, { conversation: "none", width: 550 })
+    var tweetdiv = document.createElement("div");
+    //tweetdiv.style.width = "400px";
+    document.getElementById("tooltipID").appendChild(tweetdiv);
+    tweetdiv.id = "twit";
+    var tweet = document.getElementById("twit");
+    twttr.widgets.createTweet(String(id), tweet, { conversation: "none", width: 300, theme: "dark" });
+    //console.log(tweet)
   }
 
   /*
