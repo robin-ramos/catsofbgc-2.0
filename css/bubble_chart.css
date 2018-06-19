@@ -94,7 +94,7 @@ a, a:visited, a:active {
 }
 
 .blockquote {
-    background-image: url('/img/open-quote.png');
+    background-image: url('img/open-quote.png');
     background-repeat: no-repeat;
     background-position: top left;
     padding-left: 10%;
@@ -102,7 +102,7 @@ a, a:visited, a:active {
 }
 
 .blockquote p.tweet {
-    background-image: url('/img/close-quote.png');
+    background-image: url('img/close-quote.png');
     background-repeat: no-repeat;
     background-position: bottom right;
     padding-right: 5%;
