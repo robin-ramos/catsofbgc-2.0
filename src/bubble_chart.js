@@ -9,10 +9,10 @@ var formatComma = d3.format(",.0f");
 
 function bubbleChart() {
   // Constants for sizing
-  var width = document.body.clientWidth;
+  var width = document.documentElement.clientWidth * 0.75;
   var width_pane = width/6;
   var adj = width/12;
-  var height = document.body.clientHeight * 0.9;
+  var height = document.documentElement.clientHeight * 0.9;
   var nodes = [];
 
 
@@ -89,7 +89,7 @@ function bubbleChart() {
   // @v4 scales now have a flattened naming scheme
   var fillColor = d3.scaleOrdinal()
     .domain(['negative', 'neutral', 'positive', 'featured'])
-    .range(['#ff6961', '#aab6ab ', '#61ff69', '#104e8e']);
+    .range(['#F8766D', '#DCDCDC ', '#00FBC4', '#104e8e']);
   
 
 
