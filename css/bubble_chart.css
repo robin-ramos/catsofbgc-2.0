@@ -80,8 +80,71 @@ a, a:visited, a:active {
   width: 20%;
   top: 0px;
   z-index: 90;
-
+  margin-left: 20px; 
 }
 
 
+#intro-post {
 
+}
+
+.tweet-image {
+    max-width: 100%;
+    max-height: 40vh;
+}
+
+.blockquote {
+    background-image: url('/img/open-quote.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 10%;
+    margin: 0;
+}
+
+.blockquote p.tweet {
+    background-image: url('/img/close-quote.png');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    padding-right: 5%;
+}
+
+.steptitle {
+    font-weight: bold;
+    opacity: 0.65;
+    font-size: 2em;
+}
+
+div.quote {
+    margin-top: -3vw;
+    height: 15vw;
+}
+div.quote:before {
+    content: '\201C';
+    top: 4vw;
+    right: 0.5vw;
+}
+
+div.quote:after {
+    content: '\201D';
+    bottom: 60px;
+    left: 18vw;
+}
+
+div.quote:before,
+div.quote:after {
+    font-size: 1.25em;
+    position: relative;
+    font-size: 5em;
+}
+
+a.cite {
+    position: relative;
+    bottom: 7vh;
+    left: 17vw;
+    color: white;
+
+}
+
+a.cite:before {
+    content: '- ';
+}
