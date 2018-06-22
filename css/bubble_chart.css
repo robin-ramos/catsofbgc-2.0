@@ -142,7 +142,7 @@ body {
     font-size: 5em;
 }
 
-div.step {
+/*div.step {
   margin-bottom: 100%;
 }
 
@@ -167,7 +167,7 @@ div.quote:after {
     font-size: 1.25em;
     position: relative;
     font-size: 5em;
-}
+}*/
 
 a.cite {
     position: relative;
@@ -181,7 +181,7 @@ a.cite:before {
     content: '- ';
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
     #hero-title .header {
         font-size: 3em;
     }
@@ -202,9 +202,9 @@ a.cite:before {
     div.step h3.steptitle {
         font-size: 1em;
     }
-}
+}*/
 
-#hero-title {
+/*#hero-title {
     position: absolute;
     left: 0;
     top: 30%;
@@ -218,3 +218,4 @@ a.cite:before {
     font-size: 2em;
     font-weight: bold;
 }
+*/
