@@ -121,8 +121,12 @@
 
     <div id="vis">
         <div id="toolbar">
-      <a href="#" id="all" class="button active">All Tweets</a>
-      <a href="#" id="year" class="button">Tweets By Year</a>
+      <a id="all" class="button active">All Tweets</a>
+      <a id="step-1" class="button">1</a>
+      <a id="step-2" class="button">2</a>
+      <a id="step-3" class="button">3</a>
+      <a id="step-4" class="button">4</a>
+      <a id="year" class="button">By year</a>
     </div>
     </div>
     </div>
@@ -134,6 +138,52 @@
   <script src="src/tooltip.js"></script>
   <script src="src/bubble_chart.js"></script>
     <!-- <script src="src/clustered_bubble.js"></script> -->
+  <script type="text/javascript">
+        var waypoint = new Waypoint({
+            element: document.getElementById('firsttweet'),
+            handler: function(direction) {
+                if (direction == "down") {
+                    step1(allposts);
+                }
+            }
+        })
+
+        var waypoint2 = new Waypoint({
+            element: document.getElementById('step2'),
+            handler: function(direction) {
+                if (direction == "down") {
+                    step2(allposts);
+                }
+            }
+        })
+
+        var waypoint3 = new Waypoint({
+            element: document.getElementById('step3'),
+            handler: function(direction) {
+                if (direction == "down") {
+                    step3(allposts);
+                }
+            }
+        })
+
+        var waypoint4 = new Waypoint({
+            element: document.getElementById('step4'),
+            handler: function(direction) {
+                if (direction == "down") {
+                    step4(allposts);
+                    // updateScatterAxis(allposts);
+                }
+            }
+        })
+
+        var waypoint5 = new Waypoint({
+            element: document.getElementById('step5'),
+            handler: function(direction) {
+                step5(allposts);
+            }
+        })
+  </script>
+
 
 
 </body>

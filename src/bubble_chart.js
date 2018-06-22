@@ -33,6 +33,47 @@ function bubbleChart() {
     2018: { x: (width * 3)/4, y: height / 2 }
   };
 
+  var year2012 = {
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: (width * 3)/4, y: height / 2 },
+    2014: { x: (width * 3)/4, y: height / 2 },
+    2015: { x: (width * 3)/4, y: height / 2 },
+    2016: { x: (width * 3)/4, y: height / 2 },
+    2017: { x: (width * 3)/4, y: height / 2 },
+    2018: { x: (width * 3)/4, y: height / 2 }
+  };
+
+  var year2014 = {
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: width_pane + (width_pane/2), y: height / 2 },
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
+    2015: { x: (width * 3)/4, y: height / 2 },
+    2016: { x: (width * 3)/4, y: height / 2 },
+    2017: { x: (width * 3)/4, y: height / 2 },
+    2018: { x: (width * 3)/4, y: height / 2 }
+  };
+
+  var year2016 = {
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: width_pane + (width_pane/2), y: height / 2 },
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
+    2015: { x: width_pane + 3*(width_pane/2), y: height / 2 },
+    2016: { x: width_pane + 4*(width_pane/2), y: height / 2 },
+    2017: { x: width_pane + 5*(width_pane/2), y: height / 2 },
+    2018: { x: (width * 3)/4, y: height / 2 }
+  };
+
+  var year2017 = {
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: width_pane + (width_pane/2), y: height / 2 },
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
+    2015: { x: width_pane + 3*(width_pane/2), y: height / 2 },
+    2016: { x: width_pane + 4*(width_pane/2), y: height / 2 },
+    2017: { x: (width * 3)/4, y: height / 2 },
+    2018: { x: (width * 3)/4, y: height / 2 }
+  };
+
+
   // X locations of the year titles.
   var yearsTitleX = {
     2012: width_pane - adj,
@@ -43,6 +84,23 @@ function bubbleChart() {
     2017: width_pane + 5*(width_pane/2) - adj,
     2018: (width * 3)/4  
   };
+
+  var yearsTitleX_step1 = {
+    2012: width_pane - adj
+  };
+
+  var yearsTitleX_step2 = {
+    2012: width_pane - adj,
+    2013: width_pane + (width_pane/2) - adj
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 }
+  };
+
+  var yearsTitleX_step3 = {
+    2012: width_pane - adj,
+    2013: width_pane + (width_pane/2) - adj,
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 }
+  };
+
 
   // @v4 strength to apply to the position forces
   var forceStrength = 0.03;
@@ -107,20 +165,14 @@ function bubbleChart() {
    * array for each element in the rawData input.
    */
   function createNodes(rawData) {
-    // Use the max total_amount in the data as the max in the scale's domain
-    // note we have to ensure the total_amount is a number.
+
     var maxAmount = d3.max(rawData, function (d) { return +d.pop_score; });
 
-    // Sizes bubbles based on area.
-    // @v4: new flattened scale names.
     var radiusScale = d3.scalePow()
       .exponent(0.5)
       .range([2, width*0.05])
       .domain([0, maxAmount]);
 
-    // Use map() to convert raw data into node data.
-    // Checkout http://learnjsdata.com/ for more on
-    // working with data.
     var myNodes = rawData.map(function (d) {
       if (!clusters[d.cluster] || (radiusScale(+d.pop_score) > clusters[d.cluster].radius)) clusters[d.cluster] = d;
       return {
@@ -175,11 +227,6 @@ function bubbleChart() {
     bubbles = svg.selectAll('.bubble')
       .data(nodes, function (d) { return d.id; });
 
-    // Create new circle elements each with class `bubble`.
-    // There will be one circle.bubble for each object in the nodes array.
-    // Initially, their radius (r attribute) will be 0.
-    // @v4 Selections are immutable, so lets capture the
-    //  enter selection to apply our transtition to below.
     var bubblesE = bubbles.enter().append('circle')
       .classed('bubble', true)
       .attr('r', 0)
@@ -239,30 +286,34 @@ function bubbleChart() {
     return yearCenters[d.year].x;
   }
 
+  function step1Pos(d) {
+    return year2012[d.year].x;
+  }
 
-  /*
-   * Sets visualization in "single group mode".
-   * The year labels are hidden and the force layout
-   * tick function is set to move all nodes to the
-   * center of the visualization.
-   */
+  function step2Pos(d) {
+    return year2014[d.year].x;
+  }
+
+  function step3Pos(d) {
+    return year2016[d.year].x;
+  }
+
+  function step4Pos(d) {
+    return year2012[d.year].x;
+  }
+
   function groupBubbles() {
     hideYearTitles();
 
-    // @v4 Reset the 'x' force to draw the bubbles to the center.
     simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
 
-    // @v4 We can reset the alpha value and restart the simulation
     simulation.alpha(1).restart();
   }
 
   function repositionBubbles() {
     hideYearTitles();
-
-    // @v4 Reset the 'x' force to draw the bubbles to the center.
     simulation.force('x', d3.forceX().strength(forceStrength).x(90));
 
-    // @v4 We can reset the alpha value and restart the simulation
     simulation.alpha(1).restart();
   }
 
@@ -275,11 +326,38 @@ function bubbleChart() {
    */
   function splitBubbles() {
     showYearTitles();
-
-    // @v4 Reset the 'x' force to draw the bubbles to their year centers
     simulation.force('x', d3.forceX().strength(forceStrength).x(nodeYearPos));
 
-    // @v4 We can reset the alpha value and restart the simulation
+    simulation.alpha(1).restart();
+  }
+
+  function splitBubbles1() {
+    hideYearTitles();
+    showYearTitles2();
+    simulation.force('x', d3.forceX().strength(forceStrength).x(step1Pos));
+
+    simulation.alpha(1).restart();
+  }
+
+  function splitBubbles2() {
+    hideYearTitles();
+    showYearTitles3();
+    simulation.force('x', d3.forceX().strength(forceStrength).x(step2Pos));
+
+    simulation.alpha(1).restart();
+  }
+
+  function splitBubbles3() {
+    hideYearTitles();
+    simulation.force('x', d3.forceX().strength(forceStrength).x(step3Pos));
+
+    simulation.alpha(1).restart();
+  }
+
+  function splitBubbles4() {
+    hideYearTitles();
+    simulation.force('x', d3.forceX().strength(forceStrength).x(step4Pos));
+
     simulation.alpha(1).restart();
   }
 
@@ -294,8 +372,6 @@ function bubbleChart() {
    * Shows Year title displays.
    */
   function showYearTitles() {
-    // Another way to do this would be to create
-    // the year texts once and then just hide them.
     var yearsData = d3.keys(yearsTitleX);
     var years = svg.selectAll('.year')
       .data(yearsData);
@@ -303,6 +379,32 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX[d]; })
+      .attr('y', 20)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+  }
+
+  function showYearTitles2() {
+    var yearsData = d3.keys(yearsTitleX_step1);
+    var years = svg.selectAll('.year')
+      .data(yearsData);
+
+    years.enter().append('text')
+      .attr('class', 'year')
+      .attr('x', function (d) { return yearsTitleX_step1[d]; })
+      .attr('y', 20)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+  }
+
+  function showYearTitles3() {
+    var yearsData = d3.keys(yearsTitleX_step2);
+    var years = svg.selectAll('.year')
+      .data(yearsData);
+
+    years.enter().append('text')
+      .attr('class', 'year')
+      .attr('x', function (d) { return yearsTitleX_step2[d]; })
       .attr('y', 20)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
@@ -352,8 +454,17 @@ function bubbleChart() {
     if (displayName === 'year') {
       splitBubbles();
     } 
-    else if (displayName === 'position') {
-      repositionBubbles();
+    else if (displayName === 'step-1') {
+      splitBubbles1();
+    }
+    else if (displayName === 'step-2') {
+      splitBubbles2();
+    }
+    else if (displayName === 'step-3') {
+      splitBubbles3();
+    }
+    else if (displayName === 'step-4') {
+      splitBubbles4();
     }
     else {
       groupBubbles();
