@@ -34,7 +34,7 @@ function bubbleChart() {
   };
 
   var year2012 = {
-    2012: { x: width_pane, y: height / 2 },
+    2012: { x: width/2, y: height / 2 },
     2013: { x: (width * 3)/4, y: height / 2 },
     2014: { x: (width * 3)/4, y: height / 2 },
     2015: { x: (width * 3)/4, y: height / 2 },
@@ -322,20 +322,7 @@ function bubbleChart() {
     simulation.alpha(1).restart();
   }
 
-  function repositionBubbles() {
-    hideYearTitles();
-    simulation.force('x', d3.forceX().strength(forceStrength).x(90));
 
-    simulation.alpha(1).restart();
-  }
-
-
-  /*
-   * Sets visualization in "split by year mode".
-   * The year labels are shown and the force layout
-   * tick function is set to move nodes to the
-   * yearCenter of their data's year.
-   */
   function splitBubbles() {
     showYearTitles();
     simulation.force('x', d3.forceX().strength(forceStrength).x(nodeYearPos));
@@ -393,7 +380,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX[d]; })
-      .attr('y', 20)
+      .attr('y', 30)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -406,7 +393,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX_step1[d]; })
-      .attr('y', 20)
+      .attr('y', 30)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -419,7 +406,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX_step2[d]; })
-      .attr('y', 20)
+      .attr('y', 30)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -432,7 +419,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX_step3[d]; })
-      .attr('y', 20)
+      .attr('y', 30)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -445,7 +432,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX_step4[d]; })
-      .attr('y', 20)
+      .attr('y', 30)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
