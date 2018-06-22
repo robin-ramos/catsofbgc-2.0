@@ -97,17 +97,17 @@
         </div>
         <div class="step card" id="step6">
             <div class="card-body">
-                <p>Not this <a href='http://newsinfo.inquirer.net/969674/loss-of-taguig-park-cats-sparks-outcry' target='_blank'> Inquirer.net report </a> on February 19...</p>
-                <p>Not this personal message from the hotel's General Manager on February 20...</p>
+                <p>Not this <a href='http://newsinfo.inquirer.net/969674/loss-of-taguig-park-cats-sparks-outcry' target='_blank'> Inquirer.net report </a> on February 19...</p> <br> <br>
+                <p>Nor this personal message from the hotel's General Manager on February 20...</p>
                 <div class="embed-responsive embed-responsive-16by9"><iframe src='https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fweb.facebook.com%2Fshangrilafort%2Fposts%2F2001217123241581%3A0&width=300&show_text=true&appId=1488368734536934&height=144' style='border:none;overflow:hidden;width:100%' scrolling='no' frameborder='0' allowTransparency='true'></iframe></div>
             </div>
         </div>
-        <div class="step card" id="step7">
+<!--         <div class="step card" id="step7">
             <div class="card-body">
                 <p>Nor this official statement from PestBusters on February 23.</p>
                 <div class="embed-responsive embed-responsive-16by9"><iframe src='https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fweb.facebook.com%2Fzeropests%2Fposts%2F899416996900761&width=300&show_text=true&appId=1488368734536934&height=541' style='border:none;overflow:hidden;width:100%' scrolling='no' frameborder='0' allowTransparency='true'></iframe></div>
             </div>
-        </div>
+        </div> -->
         <div class="step card" id="last-step">
             <div class="card-body">
                 <h3 class="steptitle card-title"> Taking a catnap </h3>
@@ -140,6 +140,15 @@
   <script src="src/bubble_chart.js"></script>
     <!-- <script src="src/clustered_bubble.js"></script> -->
   <script type="text/javascript">
+        var waypoint0 = new Waypoint({
+            element: document.getElementById('intro-post'),
+            handler: function(direction) {
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('group');
+                }
+            }
+        })
+
         var waypoint = new Waypoint({
             element: document.getElementById('default'),
             handler: function(direction) {

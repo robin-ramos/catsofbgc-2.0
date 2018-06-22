@@ -134,20 +134,6 @@ function bubbleChart() {
   var bubbles = null;
 
 
-  // Charge function that is called for each node.
-  // As part of the ManyBody force.
-  // This is what creates the repulsion between nodes.
-  //
-  // Charge is proportional to the diameter of the
-  // circle (which is stored in the radius attribute
-  // of the circle's associated data.
-  //
-  // This is done to allow for accurate collision
-  // detection with nodes of different sizes.
-  //
-  // Charge is negative because we want nodes to repel.
-  // @v4 Before the charge was a stand-alone attribute
-  //  of the force layout. Now we can use it as a separate force!
   function charge(d) {
     return -Math.pow(d.radius, 2.0) * forceStrength;
   }
@@ -173,21 +159,6 @@ function bubbleChart() {
     .domain(['negative', 'neutral', 'positive', 'featured'])
     .range(['#F8766D', '#DCDCDC ', '#00FBC4', '#104e8e']);
   
-
-
-
-  /*
-   * This data manipulation function takes the raw data from
-   * the CSV file and converts it into an array of node objects.
-   * Each node will store data and visualization values to visualize
-   * a bubble.
-   *
-   * rawData is expected to be an array of data objects, read in from
-   * one of d3's loading functions like d3.csv.
-   *
-   * This function returns the new node array, with a node in that
-   * array for each element in the rawData input.
-   */
   function createNodes(rawData) {
 
     var maxAmount = d3.max(rawData, function (d) { return +d.pop_score; });
@@ -260,25 +231,61 @@ function bubbleChart() {
       .on('mouseover', showDetail)
       .on('mouseout', hideDetail);
 
-    // @v4 Merge the original empty selection and the enter selection
     bubbles = bubbles.merge(bubblesE);
 
-    // Fancy transition to make bubbles appear, ending with the
-    // correct radius
+
     bubbles.transition()
       .duration(2000)
       .attr('r', function (d) { return d.radius; });
 
-
-
-    // Set the simulation's nodes to our newly created nodes array.
-    // @v4 Once we set the nodes, the simulation will start running automatically!
     simulation.nodes(nodes);
-    
-    // Set initial layout to single group.
-
 
     groupBubbles();
+
+    var color_legends = svg.append("g")
+        .attr("class", "color-legend");
+
+    color_legends.append("circle")
+        .attr("class", "legend")
+        .attr("r", 6)
+        .attr("cx", width - 100)
+        .attr("cy", 20)
+        .attr("fill-opacity", 1)
+        .style("fill", "#00FBC4");
+
+    color_legends.append("text")
+        .attr("y", 25)
+        .attr("x", width - 80)
+        .style("fill", "#00FBC4")
+        .text("Positive")
+
+    color_legends.append("circle")
+        .attr("class", "legend")
+        .attr("r", 6)
+        .attr("cx", width - 100)
+        .attr("cy", 40)
+        .attr("fill-opacity", 1)
+        .style("fill", "#DCDCDC");
+
+    color_legends.append("text")
+        .attr("y", 45)
+        .attr("x", width - 80)
+        .style("fill", "#DCDCDC")
+        .text("Neutral");
+
+    color_legends.append("circle")
+        .attr("class", "legend")
+        .attr("r", 6)
+        .attr("cx", width - 100)
+        .attr("cy", 60)
+        .attr("fill-opacity", 1)
+        .style("fill", "#F8766D");
+
+    color_legends.append("text")
+        .attr("y", 65)
+        .attr("x", width - 80)
+        .style("fill", "#F8766D")
+        .text("Negative");
   };
 
   function forceCluster(alpha) {
@@ -533,7 +540,6 @@ function bubbleChart() {
     else if (displayName === 'step-5') {
       splitBubbles5();
     }
-
     else {
       groupBubbles();
     }
