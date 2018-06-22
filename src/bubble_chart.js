@@ -46,7 +46,7 @@ function bubbleChart() {
   var year2014 = {
     2012: { x: width_pane, y: height / 2 },
     2013: { x: width_pane + (width_pane/2), y: height / 2 },
-    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
+    2014: { x: width/2, y: height / 2 },
     2015: { x: (width * 3)/4, y: height / 2 },
     2016: { x: (width * 3)/4, y: height / 2 },
     2017: { x: (width * 3)/4, y: height / 2 },
@@ -73,6 +73,15 @@ function bubbleChart() {
     2018: { x: (width * 3)/4, y: height / 2 }
   };
 
+  var year2018 = {
+    2012: { x: -width, y: -height},
+    2013: { x: -width, y: -height},
+    2014: { x: -width, y: -height},
+    2015: { x: -width, y: -height},
+    2016: { x: -width, y: -height},
+    2017: { x: -width, y: -height},
+    2018: { x: width/2, y: height / 2 }
+  };
 
   // X locations of the year titles.
   var yearsTitleX = {
@@ -86,13 +95,13 @@ function bubbleChart() {
   };
 
   var yearsTitleX_step1 = {
-    2012: width_pane - adj
+    2012: width/2 - adj
   };
 
   var yearsTitleX_step2 = {
     2012: width_pane - adj,
     2013: width_pane + (width_pane/2) - adj,
-    2014: width_pane + 2*(width_pane/2) - adj
+    2014: width/2 - adj
   };
 
   var yearsTitleX_step3 = {
@@ -113,6 +122,9 @@ function bubbleChart() {
     2018: (width * 3)/4  
   };
 
+  var yearsTitleX_step5 = {
+    2018: width/2
+  };
 
   // @v4 strength to apply to the position forces
   var forceStrength = 0.03;
@@ -314,6 +326,10 @@ function bubbleChart() {
     return year2017[d.year].x;
   }
 
+  function step5Pos(d) {
+    return year2018[d.year].x;
+  }
+
   function groupBubbles() {
     hideYearTitles();
 
@@ -358,6 +374,14 @@ function bubbleChart() {
     hideYearTitles();
     showYearTitles5();
     simulation.force('x', d3.forceX().strength(forceStrength).x(step4Pos));
+
+    simulation.alpha(1).restart();
+  }
+
+  function splitBubbles5() {
+    hideYearTitles();
+    showYearTitles6();
+    simulation.force('x', d3.forceX().strength(forceStrength).x(step5Pos));
 
     simulation.alpha(1).restart();
   }
@@ -437,6 +461,19 @@ function bubbleChart() {
       .text(function (d) { return d; });
   }
 
+  function showYearTitles6() {
+    var yearsData = d3.keys(yearsTitleX_step5);
+    var years = svg.selectAll('.year')
+      .data(yearsData);
+
+    years.enter().append('text')
+      .attr('class', 'year')
+      .attr('x', function (d) { return yearsTitleX_step5[d]; })
+      .attr('y', height*0.9)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+  }
+
 
   /*
    * Function called on mouseover to display the
@@ -493,6 +530,10 @@ function bubbleChart() {
     else if (displayName === 'step-4') {
       splitBubbles4();
     }
+    else if (displayName === 'step-5') {
+      splitBubbles5();
+    }
+
     else {
       groupBubbles();
     }
