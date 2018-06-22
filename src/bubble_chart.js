@@ -91,7 +91,7 @@ function bubbleChart() {
 
   var yearsTitleX_step2 = {
     2012: width_pane - adj,
-    2013: width_pane + (width_pane/2) - adj
+    2013: width_pane + (width_pane/2) - adj,
     2014: { x: width_pane + 2*(width_pane/2), y: height / 2 }
   };
 
