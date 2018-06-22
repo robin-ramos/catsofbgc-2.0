@@ -120,14 +120,14 @@
 
 
     <div id="vis">
-        <div id="toolbar">
+        <!-- <div id="toolbar">
       <a id="all" class="button active">All Tweets</a>
       <a id="step-1" class="button">1</a>
       <a id="step-2" class="button">2</a>
       <a id="step-3" class="button">3</a>
       <a id="step-4" class="button">4</a>
       <a id="year" class="button">By year</a>
-    </div>
+    </div> -->
     </div>
     </div>
 
@@ -135,15 +135,25 @@
   
   <script src="https://platform.twitter.com/widgets.js"></script>
   <script src="src/d3.v4.min.js"></script>
+  <script src="src/noframework.waypoints.min.js"></script>
   <script src="src/tooltip.js"></script>
   <script src="src/bubble_chart.js"></script>
     <!-- <script src="src/clustered_bubble.js"></script> -->
   <script type="text/javascript">
         var waypoint = new Waypoint({
+            element: document.getElementById('default'),
+            handler: function(direction) {
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('step-1');
+                }
+            }
+        })
+
+        var waypoint1 = new Waypoint({
             element: document.getElementById('firsttweet'),
             handler: function(direction) {
-                if (direction == "down") {
-                    step1(allposts);
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('step-2');
                 }
             }
         })
@@ -151,8 +161,8 @@
         var waypoint2 = new Waypoint({
             element: document.getElementById('step2'),
             handler: function(direction) {
-                if (direction == "down") {
-                    step2(allposts);
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('step-3');
                 }
             }
         })
@@ -160,8 +170,8 @@
         var waypoint3 = new Waypoint({
             element: document.getElementById('step3'),
             handler: function(direction) {
-                if (direction == "down") {
-                    step3(allposts);
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('step-3');
                 }
             }
         })
@@ -169,19 +179,12 @@
         var waypoint4 = new Waypoint({
             element: document.getElementById('step4'),
             handler: function(direction) {
-                if (direction == "down") {
-                    step4(allposts);
-                    // updateScatterAxis(allposts);
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('step-4');
                 }
             }
         })
 
-        var waypoint5 = new Waypoint({
-            element: document.getElementById('step5'),
-            handler: function(direction) {
-                step5(allposts);
-            }
-        })
   </script>
 
 
