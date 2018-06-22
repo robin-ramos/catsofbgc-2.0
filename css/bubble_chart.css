@@ -15,7 +15,7 @@ body {
 
 .bg {
     /* The image used */
-    background-image: url("/img/cats1.jpg");
+    background-image: url("https://cdn.rawgit.com/robin-ramos/catsofbgc-2.0/a59f0d2f/img/cats1.jpg");
     /* Full height */
     min-height: 100vh;
     width: 100%;
@@ -121,7 +121,7 @@ body {
 }
 
 .blockquote {
-    background-image: url('/img/open-quote.png');
+    background-image: url('https://rawgit.com/robin-ramos/catsofbgc-2.0/master/img/open-quote.png');
     background-repeat: no-repeat;
     background-position: top left;
     padding-left: 10%;
@@ -129,7 +129,7 @@ body {
 }
 
 .blockquote p.tweet {
-    background-image: url('/img/close-quote.png');
+    background-image: url('https://cdn.rawgit.com/robin-ramos/catsofbgc-2.0/a59f0d2f/img/close-quote.png');
     background-repeat: no-repeat;
     background-position: bottom right;
     padding-right: 5%;
@@ -199,7 +199,7 @@ a.cite:before {
     }
 
     div.step h3.steptitle {
-        font-size: 1em;
+        font-size: 1.5em;
     }
 }
 
