@@ -505,7 +505,8 @@ function bubbleChart() {
       .attr('y', function (d) { return yearsTitleX_step1[d]; })
       .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; });
+      .text(function (d) { return d; }) 
+      .attr('fill', '#2C4DAD');
   }
 
   function showYearTitles3() {
@@ -518,7 +519,9 @@ function bubbleChart() {
       .attr('y', function (d) { return yearsTitleX_step2[d]; })
       .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; });
+      .text(function (d) { return d; })
+      .attr('fill', function (d) { 
+        if (d == '2014') return '#2C4DAD'});
   }
 
   function showYearTitles4() {
@@ -531,7 +534,9 @@ function bubbleChart() {
       .attr('y', function (d) { return yearsTitleX_step3[d]; })
       .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; });
+      .text(function (d) { return d; })
+      .attr('fill', function (d) { 
+        if (d == '2016') return '#2C4DAD'});;
   }
 
   function showYearTitles5() {
@@ -544,7 +549,9 @@ function bubbleChart() {
       .attr('y', function (d) { return yearsTitleX_step4[d]; })
       .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; });
+      .text(function (d) { return d; })
+      .attr('fill', function (d) { 
+        if (d == '2017') return '#2C4DAD'});
   }
 
   function showYearTitles6() {
@@ -557,7 +564,9 @@ function bubbleChart() {
       .attr('x', function (d) { return yearsTitleX_step5[d]; })
       .attr('y', height*0.95)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; });
+      .text(function (d) { return d; })
+      .attr('fill', function (d) { 
+        if (d == '2018') return '#2C4DAD'});
   }
 
 

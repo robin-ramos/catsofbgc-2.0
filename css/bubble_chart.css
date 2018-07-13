@@ -65,9 +65,14 @@ body {
   margin-left: 10px;
 }
 
+.year-title {
+  font-size: 1.2em;
+  color: #2C4DAD;
+  cursor: default;
+}
+
 .year {
   font-size: 21px;
-  fill: #aaa;
   cursor: default;
 }
 
