@@ -1,5 +1,6 @@
 var nodess = [];
 var clusters = new Array(3);
+var rS;
 
 var formatDate = d3.timeFormat("%B %d, %Y");
 var formatDecimal = d3.format(".2f");
@@ -34,13 +35,13 @@ function bubbleChart() {
   };
 
   var year2012 = {
-    2012: { x: width/2, y: height / 2 },
-    2013: { x: (width * 3)/4, y: height / 2 },
-    2014: { x: (width * 3)/4, y: height / 2 },
-    2015: { x: (width * 3)/4, y: height / 2 },
-    2016: { x: (width * 3)/4, y: height / 2 },
-    2017: { x: (width * 3)/4, y: height / 2 },
-    2018: { x: (width * 3)/4, y: height / 2 }
+    2012: { x: height/2, y: height / 2 },
+    2013: { x: (height * 3)/4, y: height / 2 },
+    2014: { x: (height * 3)/4, y: height / 2 },
+    2015: { x: (height * 3)/4, y: height / 2 },
+    2016: { x: (height * 3)/4, y: height / 2 },
+    2017: { x: (height * 3)/4, y: height / 2 },
+    2018: { x: (height * 3)/4, y: height / 2 }
   };
 
   var year2014 = {
@@ -74,13 +75,13 @@ function bubbleChart() {
   };
 
   var year2018 = {
-    2012: { x: -width, y: -height},
-    2013: { x: -width, y: -height},
-    2014: { x: -width, y: -height},
-    2015: { x: -width, y: -height},
-    2016: { x: -width, y: -height},
-    2017: { x: -width, y: -height},
-    2018: { x: width/2, y: height / 2 }
+    2012: { x: -height, y: -height},
+    2013: { x: -height, y: -height},
+    2014: { x: -height, y: -height},
+    2015: { x: -height, y: -height},
+    2016: { x: -height, y: -height},
+    2017: { x: -height, y: -height},
+    2018: { x: height/2, y: height / 2 }
   };
 
   // X locations of the year titles.
@@ -95,7 +96,7 @@ function bubbleChart() {
   };
 
   var yearsTitleX_step1 = {
-    2012: width/2 - adj
+    2012: width_pane  
   };
 
   var yearsTitleX_step2 = {
@@ -128,6 +129,7 @@ function bubbleChart() {
 
   // @v4 strength to apply to the position forces
   var forceStrength = 0.03;
+  var forceStrength2 = 0.01;
 
   // These will be set in create_nodes and create_vis
   var svg = null;
@@ -149,15 +151,24 @@ function bubbleChart() {
     //.force('cluster', forceCluster)
     .on('tick', ticked);
 
+  var simulation2 = d3.forceSimulation()
+    .velocityDecay(0.1)
+    .force('x', d3.forceX().strength(forceStrength).x(center.x))
+    .force('y', d3.forceY().strength(forceStrength).y(center.y))
+    .force('charge', d3.forceManyBody().strength(charge))
+    //.force('cluster', forceCluster)
+    .on('tick', ticked);
+
   // @v4 Force starts up automatically,
   //  which we don't want as there aren't any nodes yet.
   simulation.stop();
+  simulation2.stop();
 
   // Nice looking colors - no reason to buck the trend
   // @v4 scales now have a flattened naming scheme
   var fillColor = d3.scaleOrdinal()
     .domain(['negative', 'neutral', 'positive', 'featured'])
-    .range(['#F8766D', '#DCDCDC ', '#00FBC4', '#104e8e']);
+    .range(['#F8766D', '#DCDCDC ', '#00FBC4', '#F8766D']);
   
   function createNodes(rawData) {
 
@@ -167,6 +178,8 @@ function bubbleChart() {
       .exponent(0.5)
       .range([2, width*0.05])
       .domain([0, maxAmount]);
+
+    rS = radiusScale;
 
     var myNodes = rawData.map(function (d) {
       if (!clusters[d.cluster] || (radiusScale(+d.pop_score) > clusters[d.cluster].radius)) clusters[d.cluster] = d;
@@ -242,50 +255,108 @@ function bubbleChart() {
 
     groupBubbles();
 
+    var translate_x = 200;
+    var translate_y = 100;
     var color_legends = svg.append("g")
         .attr("class", "color-legend");
 
     color_legends.append("circle")
         .attr("class", "legend")
         .attr("r", 6)
-        .attr("cx", width - 100)
+        .attr("cx", width - translate_x)
         .attr("cy", 20)
         .attr("fill-opacity", 1)
         .style("fill", "#00FBC4");
 
     color_legends.append("text")
         .attr("y", 25)
-        .attr("x", width - 80)
+        .attr("x", width - translate_x*0.8)
         .style("fill", "#00FBC4")
         .text("Positive")
 
     color_legends.append("circle")
         .attr("class", "legend")
         .attr("r", 6)
-        .attr("cx", width - 100)
+        .attr("cx", width - translate_x)
         .attr("cy", 40)
         .attr("fill-opacity", 1)
         .style("fill", "#DCDCDC");
 
     color_legends.append("text")
         .attr("y", 45)
-        .attr("x", width - 80)
+        .attr("x", width - translate_x*0.8)
         .style("fill", "#DCDCDC")
         .text("Neutral");
 
     color_legends.append("circle")
         .attr("class", "legend")
         .attr("r", 6)
-        .attr("cx", width - 100)
+        .attr("cx", width - translate_x)
         .attr("cy", 60)
         .attr("fill-opacity", 1)
         .style("fill", "#F8766D");
 
     color_legends.append("text")
         .attr("y", 65)
-        .attr("x", width - 80)
+        .attr("x", width - translate_x*0.8)
         .style("fill", "#F8766D")
         .text("Negative");
+
+    var size_legends = svg.append("g")
+        .attr("class", "size-legend")
+
+    size_legends.append("circle") //10 pop
+        .attr("class", "legend")
+        .attr("r", size_legend(10))
+        .attr("cx", width - translate_x)
+        .attr("cy", translate_y + size_legend(10));
+
+    size_legends.append("text")
+        .attr("y", translate_y  + size_legend(10) + 5)
+        .attr("x", width - translate_x*0.8)
+        .style("fill", "black")
+        .text("10 likes and retweets")
+
+    size_legends.append("circle") // 50 pop score
+        .attr("class", "legend")
+        .attr("r", size_legend(50))
+        .attr("cx", width - translate_x)
+        .attr("cy", translate_y + size_legend(50));
+
+    size_legends.append("text")
+        .attr("y", translate_y + size_legend(50)*2)
+        .attr("x", width - translate_x*0.8)
+        .style("fill", "black")
+        .text("50 likes and retweets")
+
+    size_legends.append("circle") // 100 pop score
+        .attr("class", "legend")
+        .attr("r", size_legend(100))
+        .attr("cx", width - translate_x)
+        .attr("cy", translate_y + size_legend(100));
+
+    size_legends.append("text")
+        .attr("y", translate_y + size_legend(100)*2)
+        .attr("x", width - translate_x*0.8)
+        .style("fill", "black")
+        .text("100 likes and retweets")
+
+    size_legends.append("circle") // 500 pop score
+        .attr("class", "legend")
+        .attr("r", size_legend(500))
+        .attr("cx", width - translate_x)
+        .attr("cy", translate_y + size_legend(500));
+
+    size_legends.append("text")
+        .attr("y", translate_y + size_legend(500)*2)
+        .attr("x", width - translate_x*0.8)
+        .style("fill", "black")
+        .text("500 likes and retweets")
+
+  };
+
+  function size_legend(followers) {
+    return rS(followers);
   };
 
   function forceCluster(alpha) {
@@ -340,9 +411,17 @@ function bubbleChart() {
   function groupBubbles() {
     hideYearTitles();
 
-    simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
+    simulation.force('y', d3.forceY().strength(forceStrength).y(center.y));
 
     simulation.alpha(1).restart();
+  }
+
+  function groupBubbles2() {
+    hideYearTitles();
+
+    simulation.force('y', d3.forceY().strength(forceStrength).y(center.y));
+
+    simulation.alpha(0.8).restart();
   }
 
 
@@ -356,7 +435,7 @@ function bubbleChart() {
   function splitBubbles1() {
     hideYearTitles();
     showYearTitles2();
-    simulation.force('x', d3.forceX().strength(forceStrength).x(step1Pos));
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step1Pos));
 
     simulation.alpha(1).restart();
   }
@@ -364,7 +443,7 @@ function bubbleChart() {
   function splitBubbles2() {
     hideYearTitles();
     showYearTitles3();
-    simulation.force('x', d3.forceX().strength(forceStrength).x(step2Pos));
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step2Pos));
 
     simulation.alpha(1).restart();
   }
@@ -372,7 +451,7 @@ function bubbleChart() {
   function splitBubbles3() {
     hideYearTitles();
     showYearTitles4();
-    simulation.force('x', d3.forceX().strength(forceStrength).x(step3Pos));
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step3Pos));
 
     simulation.alpha(1).restart();
   }
@@ -380,7 +459,7 @@ function bubbleChart() {
   function splitBubbles4() {
     hideYearTitles();
     showYearTitles5();
-    simulation.force('x', d3.forceX().strength(forceStrength).x(step4Pos));
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step4Pos));
 
     simulation.alpha(1).restart();
   }
@@ -388,7 +467,7 @@ function bubbleChart() {
   function splitBubbles5() {
     hideYearTitles();
     showYearTitles6();
-    simulation.force('x', d3.forceX().strength(forceStrength).x(step5Pos));
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step5Pos));
 
     simulation.alpha(1).restart();
   }
@@ -410,8 +489,8 @@ function bubbleChart() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d) { return yearsTitleX[d]; })
-      .attr('y', height*0.9)
+      .attr('y', function (d) { return yearsTitleX[d]; })
+      .attr('x', width*0.7)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -423,8 +502,8 @@ function bubbleChart() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d) { return yearsTitleX_step1[d]; })
-      .attr('y', height*0.9)
+      .attr('y', function (d) { return yearsTitleX_step1[d]; })
+      .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -436,8 +515,8 @@ function bubbleChart() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d) { return yearsTitleX_step2[d]; })
-      .attr('y', height*0.9)
+      .attr('y', function (d) { return yearsTitleX_step2[d]; })
+      .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -449,8 +528,8 @@ function bubbleChart() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d) { return yearsTitleX_step3[d]; })
-      .attr('y', height*0.9)
+      .attr('y', function (d) { return yearsTitleX_step3[d]; })
+      .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -462,8 +541,8 @@ function bubbleChart() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d) { return yearsTitleX_step4[d]; })
-      .attr('y', height*0.9)
+      .attr('y', function (d) { return yearsTitleX_step4[d]; })
+      .attr('x', width*0.65)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -476,7 +555,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('x', function (d) { return yearsTitleX_step5[d]; })
-      .attr('y', height*0.9)
+      .attr('y', height*0.95)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -539,6 +618,9 @@ function bubbleChart() {
     }
     else if (displayName === 'step-5') {
       splitBubbles5();
+    }
+    else if (displayName === 'last') {
+      groupBubbles2();
     }
     else {
       groupBubbles();
@@ -611,7 +693,7 @@ function addCommas(nStr) {
 }
 
 // Load the data.
-d3.csv('data/allposts4.csv', display);
+d3.csv('data/allposts5.csv', display);
 
 // setup the buttons.
 setupButtons();
