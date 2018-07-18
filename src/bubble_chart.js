@@ -559,7 +559,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('y', function (d) { return yearsTitleX_step1[d]; })
-      .attr('x', width*0.65)
+      .attr('x', width*0.25)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; }) 
       .attr('fill', '#2C4DAD');
@@ -573,7 +573,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('y', function (d) { return yearsTitleX_step1a[d]; })
-      .attr('x', width*0.65)
+      .attr('x', width*0.25)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -587,7 +587,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('y', function (d) { return yearsTitleX_step2[d]; })
-      .attr('x', width*0.65)
+      .attr('x', width*0.25)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; })
       .attr('fill', function (d) { 
@@ -603,7 +603,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('y', function (d) { return yearsTitleX_step2a[d]; })
-      .attr('x', width*0.65)
+      .attr('x', width*0.25)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
   }
@@ -617,7 +617,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('y', function (d) { return yearsTitleX_step3[d]; })
-      .attr('x', width*0.65)
+      .attr('x', width*0.25)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; })
       .attr('fill', function (d) { 
@@ -632,7 +632,7 @@ function bubbleChart() {
     years.enter().append('text')
       .attr('class', 'year')
       .attr('y', function (d) { return yearsTitleX_step4[d]; })
-      .attr('x', width*0.65)
+      .attr('x', width*0.25)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; })
       .attr('fill', function (d) { 
