@@ -35,8 +35,18 @@ function bubbleChart() {
   };
 
   var year2012 = {
-    2012: { x: height/2, y: height / 2 },
+    2012: { x: width_pane, y: height / 2 },
     2013: { x: (height * 3)/4, y: height / 2 },
+    2014: { x: (height * 3)/4, y: height / 2 },
+    2015: { x: (height * 3)/4, y: height / 2 },
+    2016: { x: (height * 3)/4, y: height / 2 },
+    2017: { x: (height * 3)/4, y: height / 2 },
+    2018: { x: (height * 3)/4, y: height / 2 }
+  };
+
+  var year2013 = {
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: width_pane + (width_pane/2), y: height / 2 },
     2014: { x: (height * 3)/4, y: height / 2 },
     2015: { x: (height * 3)/4, y: height / 2 },
     2016: { x: (height * 3)/4, y: height / 2 },
@@ -47,8 +57,18 @@ function bubbleChart() {
   var year2014 = {
     2012: { x: width_pane, y: height / 2 },
     2013: { x: width_pane + (width_pane/2), y: height / 2 },
-    2014: { x: width/2, y: height / 2 },
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
     2015: { x: (width * 3)/4, y: height / 2 },
+    2016: { x: (width * 3)/4, y: height / 2 },
+    2017: { x: (width * 3)/4, y: height / 2 },
+    2018: { x: (width * 3)/4, y: height / 2 }
+  };
+
+  var year2015 = {
+    2012: { x: width_pane, y: height / 2 },
+    2013: { x: width_pane + (width_pane/2), y: height / 2 },
+    2014: { x: width_pane + 2*(width_pane/2), y: height / 2 },
+    2015: { x: width_pane + 3*(width_pane/2), y: height / 2 },
     2016: { x: (width * 3)/4, y: height / 2 },
     2017: { x: (width * 3)/4, y: height / 2 },
     2018: { x: (width * 3)/4, y: height / 2 }
@@ -96,13 +116,25 @@ function bubbleChart() {
   };
 
   var yearsTitleX_step1 = {
-    2012: width_pane  
+    2012: width_pane - adj 
+  };
+
+  var yearsTitleX_step1a = {
+    2012: width_pane - adj,
+    2013: width_pane + (width_pane/2) - adj
   };
 
   var yearsTitleX_step2 = {
     2012: width_pane - adj,
     2013: width_pane + (width_pane/2) - adj,
-    2014: width/2 - adj
+    2014: width_pane + 2*(width_pane/2) - adj
+  };
+
+  var yearsTitleX_step2a = {
+    2012: width_pane - adj,
+    2013: width_pane + (width_pane/2) - adj,
+    2014: width_pane + 2*(width_pane/2) - adj,
+    2015: width_pane + 3*(width_pane/2) - adj
   };
 
   var yearsTitleX_step3 = {
@@ -392,8 +424,16 @@ function bubbleChart() {
     return year2012[d.year].x;
   }
 
+  function step1aPos(d) {
+    return year2013[d.year].x;
+  }
+
   function step2Pos(d) {
     return year2014[d.year].x;
+  }
+
+  function step2aPos(d) {
+    return year2015[d.year].x;
   }
 
   function step3Pos(d) {
@@ -440,10 +480,26 @@ function bubbleChart() {
     simulation.alpha(1).restart();
   }
 
+  function splitBubbles1a() {
+    hideYearTitles();
+    showYearTitles2a();
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step1aPos));
+
+    simulation.alpha(1).restart();
+  }
+
   function splitBubbles2() {
     hideYearTitles();
     showYearTitles3();
     simulation.force('y', d3.forceY().strength(forceStrength).y(step2Pos));
+
+    simulation.alpha(1).restart();
+  }
+
+  function splitBubbles2a() {
+    hideYearTitles();
+    showYearTitles3a();
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step2aPos));
 
     simulation.alpha(1).restart();
   }
@@ -509,6 +565,20 @@ function bubbleChart() {
       .attr('fill', '#2C4DAD');
   }
 
+  function showYearTitles2a() {
+    var yearsData = d3.keys(yearsTitleX_step1a);
+    var years = svg.selectAll('.year')
+      .data(yearsData);
+
+    years.enter().append('text')
+      .attr('class', 'year')
+      .attr('y', function (d) { return yearsTitleX_step1a[d]; })
+      .attr('x', width*0.65)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+  }
+
+
   function showYearTitles3() {
     var yearsData = d3.keys(yearsTitleX_step2);
     var years = svg.selectAll('.year')
@@ -523,6 +593,21 @@ function bubbleChart() {
       .attr('fill', function (d) { 
         if (d == '2014') return '#2C4DAD'});
   }
+
+
+  function showYearTitles3a() {
+    var yearsData = d3.keys(yearsTitleX_step2a);
+    var years = svg.selectAll('.year')
+      .data(yearsData);
+
+    years.enter().append('text')
+      .attr('class', 'year')
+      .attr('y', function (d) { return yearsTitleX_step2a[d]; })
+      .attr('x', width*0.65)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+  }
+
 
   function showYearTitles4() {
     var yearsData = d3.keys(yearsTitleX_step3);
@@ -616,8 +701,14 @@ function bubbleChart() {
     else if (displayName === 'step-1') {
       splitBubbles1();
     }
+    else if (displayName === 'step-1a') {
+      splitBubbles1a();
+    }
     else if (displayName === 'step-2') {
       splitBubbles2();
+    }
+    else if (displayName === 'step-2a') {
+      splitBubbles2a();
     }
     else if (displayName === 'step-3') {
       splitBubbles3();
