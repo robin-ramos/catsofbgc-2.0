@@ -97,7 +97,7 @@
            <!--  <div class="embed-responsive embed-responsive-16by9"><iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fshangrilafort%2Fphotos%2Fa.996102000419770.1073741828.994986307198006%2F1998901190139841%2F%3Ftype%3D3&width=300&show_text=false&appId=1488368734536934&height=452" style="border:none;overflow:hidden;width:100%" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe></div> -->
             </div>
         </div>
-        <div class="step card" id="step6">
+        <div class="step card" id="2018-split">
             <div class="card-body">
                 <p>Not this <a href='http://newsinfo.inquirer.net/969674/loss-of-taguig-park-cats-sparks-outcry' target='_blank'> Inquirer.net report </a> on February 19...</p> <br> <br>
                 <p>Nor this personal message from the hotel's General Manager on February 20...</p>
@@ -213,6 +213,15 @@
             handler: function(direction) {
                 if (direction == "down" || direction == "up") {
                     myBubbleChart.toggleDisplay('last');
+                }
+            }
+        })
+
+        var waypoint6 = new Waypoint({
+            element: document.getElementById('2018-split'),
+            handler: function(direction) {
+                if (direction == "down" || direction == "up") {
+                    myBubbleChart.toggleDisplay('2018split');
                 }
             }
         })

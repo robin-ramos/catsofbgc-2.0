@@ -3,9 +3,10 @@ var clusters = new Array(3);
 var rS;
 
 var formatDate = d3.timeFormat("%B %d, %Y");
+var formatMonth = d3.timeFormat("%m%Y")
 var formatDecimal = d3.format(".2f");
 var formatInteger = d3.format(".0f");
-var parseTime = d3.timeParse("%d/%m/%Y");
+var parseTime = d3.timeParse("%Y-%m-%d");
 var formatComma = d3.format(",.0f");
 
 function bubbleChart() {
@@ -95,13 +96,19 @@ function bubbleChart() {
   };
 
   var year2018 = {
-    2012: { x: -height, y: -height},
-    2013: { x: -height, y: -height},
-    2014: { x: -height, y: -height},
-    2015: { x: -height, y: -height},
-    2016: { x: -height, y: -height},
-    2017: { x: -height, y: -height},
+    2012: { x: -height, y: -height },
+    2013: { x: -height, y: -height },
+    2014: { x: -height, y: -height },
+    2015: { x: -height, y: -height },
+    2016: { x: -height, y: -height },
+    2017: { x: -height, y: -height },
     2018: { x: height/2, y: height / 2 }
+  };
+
+  var year2018a = {
+    '012018': { x: width_pane, y: height / 2 },
+    '022018': { x: width_pane + 1.5*(width_pane/2), y: height / 2 },
+    '032018': { x: width_pane + 3*(width_pane/2), y: height / 2 }
   };
 
   // X locations of the year titles.
@@ -157,6 +164,12 @@ function bubbleChart() {
 
   var yearsTitleX_step5 = {
     2018: width/2
+  };
+
+  var yearsTitleX_step6 = {
+    'January 2018': width_pane/2,
+    'February 2018': width_pane + 1.5*(width_pane/2),
+    'March 2018': width_pane + 4*(width_pane/2)  
   };
 
   // @v4 strength to apply to the position forces
@@ -229,10 +242,12 @@ function bubbleChart() {
         likes: d.fave,
         retweets: d.rt,
         sent_score: d.score,
+        month: d.month,
+        time: d.time,
         x: Math.random() * 900,
         y: Math.random() * 800
       };
-
+      
     });
 
     // sort them to prevent occlusion of smaller nodes.
@@ -448,6 +463,17 @@ function bubbleChart() {
     return year2018[d.year].x;
   }
 
+  function step6Pos(d) {
+    if (d.year == 2018) {
+      return year2018a[d.month].x; 
+    }
+    else {
+      return -1000;
+    }
+
+  }
+
+
   function groupBubbles() {
     hideYearTitles();
 
@@ -527,6 +553,15 @@ function bubbleChart() {
 
     simulation.alpha(1).restart();
   }
+
+  function splitBubbles6() {
+    hideYearTitles();
+    showYearTitles7();
+    simulation.force('y', d3.forceY().strength(forceStrength).y(step6Pos));
+
+    simulation.alpha(1).restart();
+  }
+
 
   /*
    * Hides Year title displays.
@@ -654,6 +689,19 @@ function bubbleChart() {
         if (d == '2018') return '#2C4DAD'});
   }
 
+  function showYearTitles7() {
+    var yearsData = d3.keys(yearsTitleX_step6);
+    var years = svg.selectAll('.year')
+      .data(yearsData);
+
+    years.enter().append('text')
+      .attr('class', 'year')
+      .attr('y', function (d) { return yearsTitleX_step6[d]; })
+      .attr('x', width*0.15)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+  }
+
 
   /*
    * Function called on mouseover to display the
@@ -671,7 +719,7 @@ function bubbleChart() {
                   '<span>Likes: ' + d.likes + '</span><br>' +
                   '<span>Retweets: ' + d.retweets + '</span>';
     var tweetID = d.id;
-    console.log(tweetID)
+    //console.log(tweetID)
     tooltip.showTooltip(content, d3.event, tweetID);
   }
 
@@ -722,6 +770,10 @@ function bubbleChart() {
     else if (displayName === 'last') {
       groupBubbles2();
     }
+    else if (displayName === '2018split') {
+      splitBubbles6();
+    }
+
     else {
       groupBubbles();
     }
@@ -793,8 +845,8 @@ function addCommas(nStr) {
 }
 
 // Load the data.
-d3.csv('data/allposts5.csv', display);
+d3.csv('data/allposts5a.csv', display);
 
 // setup the buttons.
-setupButtons();
 
+setupButtons();

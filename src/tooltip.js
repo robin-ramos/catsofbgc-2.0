@@ -32,7 +32,7 @@ function floatingTooltip(tooltipId, width) {
     tt.style('opacity', 1)
       .html(content);
     loadTweet(tweetID);
-    console.log(tweetID)
+    //console.log(tweetID)
     //console.log(pointer-eventsnt)
     updatePosition(event);
   }
